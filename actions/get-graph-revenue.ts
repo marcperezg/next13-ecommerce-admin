@@ -28,12 +28,14 @@ export const getGraphRevenue = async (storeId: string): Promise<GraphData[]> => 
     let revenueForOrder = 0;
 
     for (const item of order.orderItems) {
-      revenueForOrder += item.product.price.toNumber();
+      // Suma directamente item.product.price ya que es un número
+      revenueForOrder += item.product.price;
     }
 
-    // Adding the revenue for this order to the respective month
+    // Agrega la ganancia de esta orden al mes correspondiente
     monthlyRevenue[month] = (monthlyRevenue[month] || 0) + revenueForOrder;
-  }
+}
+
 
   // Converting the grouped data into the format expected by the graph
   const graphData: GraphData[] = [

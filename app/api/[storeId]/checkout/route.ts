@@ -34,7 +34,7 @@ export async function POST(
 
   const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
 
-  products.forEach((product) => {
+  products.forEach((product: any) => {
     line_items.push({
       quantity: 1,
       price_data: {
@@ -42,10 +42,13 @@ export async function POST(
         product_data: {
           name: product.name,
         },
-        unit_amount: product.price.toNumber() * 100
+        // Asumiendo que product.price ya es un número, lo multiplicamos directamente por 100
+        unit_amount: product.price * 100
       }
     });
   });
+  
+  
 
   const order = await prismadb.order.create({
     data: {

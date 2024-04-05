@@ -1,5 +1,4 @@
 import prismadb from "@/lib/prismadb";
-
 import { CategoryForm } from "./components/category-form";
 
 const CategoryPage = async ({
@@ -7,11 +6,16 @@ const CategoryPage = async ({
 }: {
   params: { categoryId: string, storeId: string }
 }) => {
-  const category = await prismadb.category.findUnique({
-    where: {
-      id: params.categoryId
-    }
-  });
+  let category = null;
+  
+  // Solo realiza la consulta si categoryId es un ObjectId válido
+  if (params.categoryId !== "new") {
+    category = await prismadb.category.findUnique({
+      where: {
+        id: params.categoryId
+      }
+    });
+  }
 
   const billboards = await prismadb.billboard.findMany({
     where: {

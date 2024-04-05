@@ -1,5 +1,4 @@
 import prismadb from "@/lib/prismadb";
-
 import { SizeForm } from "./components/size-form";
 
 const SizePage = async ({
@@ -7,11 +6,20 @@ const SizePage = async ({
 }: {
   params: { sizeId: string }
 }) => {
-  const size = await prismadb.size.findUnique({
-    where: {
-      id: params.sizeId
-    }
-  });
+  let size;
+
+  // Verifica si el sizeId es "new" y evita la consulta a la base de datos
+  if (params.sizeId !== "new") {
+    size = await prismadb.size.findUnique({
+      where: {
+        id: params.sizeId
+      }
+    });
+  } else {
+    // Opcional: Inicializa size con valores por defecto para el formulario de creación
+    // Esto depende de cómo tu SizeForm maneja los casos de creación (por ejemplo, si esperas un objeto vacío o null)
+    size = null; // o { /* valores por defecto */ } según lo necesites
+  }
 
   return ( 
     <div className="flex-col">

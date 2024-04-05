@@ -1,5 +1,4 @@
 import prismadb from "@/lib/prismadb";
-
 import { ProductForm } from "./components/product-form";
 
 const ProductPage = async ({
@@ -7,15 +6,24 @@ const ProductPage = async ({
 }: {
   params: { productId: string, storeId: string }
 }) => {
-  const product = await prismadb.product.findUnique({
-    where: {
-      id: params.productId,
-    },
-    include: {
-      images: true,
-    }
-  });
+  let product;
 
+  // Verifica si el productId es "new" y evita la consulta a la base de datos
+  if (params.productId !== "new") {
+    product = await prismadb.product.findUnique({
+      where: {
+        id: params.productId,
+      },
+      include: {
+        images: true,
+      }
+    });
+  } else {
+    // Opcional: Inicializa product con valores por defecto para el formulario de creación
+    product = null; // o cualquier estructura que esperes en el formulario
+  }
+
+  // Resto de las consultas permanecen igual
   const categories = await prismadb.category.findMany({
     where: {
       storeId: params.storeId,
